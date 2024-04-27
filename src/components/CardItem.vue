@@ -78,7 +78,7 @@
       <template v-slot:activator="{ props }">
         <v-btn
           v-bind="props"
-          icon="mdi-sort"
+          icon="mdi-sort-descending"
           density="compact"
           variant="tonal"
           class="pos-btn"
