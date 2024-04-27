@@ -7,7 +7,7 @@
           icon="mdi-pencil"
           density="compact"
           variant="tonal"
-          class="edit-btn"
+          class="edit-btn pos-btn"
           color="green"
           @click="isEditCardDialogOpen = true" />
       </template>
@@ -19,7 +19,7 @@
           icon="mdi-arrow-right"
           density="compact"
           variant="tonal"
-          class="to-right-btn"
+          class="to-right-btn pos-btn"
           color="grey"
           @click="toNextList" />
       </template>
@@ -31,7 +31,7 @@
           icon="mdi-arrow-left"
           density="compact"
           variant="tonal"
-          class="to-left-btn"
+          class="to-left-btn pos-btn"
           color="grey"
           @click="toPreviousList" />
       </template>
@@ -43,21 +43,48 @@
           icon="mdi-delete"
           density="compact"
           variant="tonal"
-          class="delete-btn"
+          class="delete-btn pos-btn"
           color="red"
           @click="isDeleteCardDialogOpen = true" />
       </template>
     </v-tooltip>
-    <v-tooltip text="Сортировка по рейтингу">
+    <v-tooltip text="Без сортировки" location="top">
+      <template v-slot:activator="{ props }">
+        <v-btn
+          v-bind="props"
+          icon="mdi-sort-variant-remove"
+          density="compact"
+          variant="tonal"
+          class="pos-btn"
+          color="blue"
+          @click="$emit('update:sort', 'none')"
+        />
+      </template>
+    </v-tooltip>
+    <v-tooltip text="Сначала с лучшей оценкой" location="top">
+      <template v-slot:activator="{ props }">
+        <v-btn
+          v-bind="props"
+          icon="mdi-sort-ascending"
+          density="compact"
+          variant="tonal"
+          class="pos-btn"
+          color="blue"
+          @click="$emit('update:sort', 'rating:desc')"
+        />
+      </template>
+    </v-tooltip>
+    <v-tooltip text="Сначала с худшей оценкой" location="top">
       <template v-slot:activator="{ props }">
         <v-btn
           v-bind="props"
           icon="mdi-sort"
           density="compact"
           variant="tonal"
-          class="sort-btn"
+          class="pos-btn"
           color="blue"
-          @click="sortList" />
+          @click="$emit('update:sort', 'rating:asc')"
+        />
       </template>
     </v-tooltip>
 
@@ -108,6 +135,8 @@
   const firstList = inject('firstList');
   const secondList = inject('secondList');
   const lastList = inject('lastList');
+
+  const emits = defineEmits(['update:sort'])
 
   const props = defineProps({
     card: {},
@@ -171,6 +200,7 @@
 
 <style lang="scss" scoped>
   .card {
+    --offset-top-step: 40px;
     margin-top: 20px;
     padding: 10%;
     width: 100%;
@@ -182,31 +212,14 @@
     border-radius: 10px;
     position: relative;
     cursor: pointer;
-    .edit-btn {
+    .pos-btn {
       position: absolute;
-      right: 20px;
-      top: 20px;
-    }
-
-    .to-right-btn {
-      position: absolute;
-      right: 20px;
-      top: 60px;
-    }
-    .to-left-btn {
-      position: absolute;
-      right: 20px;
-      top: 100px;
-    }
-    .sort-btn {
-      position: absolute;
-      right: 20px;
-      top: 140px;
-    }
-    .delete-btn {
-      position: absolute;
-      right: 20px;
-      bottom: 20px;
+      right: 15px;
+      @for $i from 1 to 8 {
+        &:nth-child(#{$i}) {
+          top: calc(var(--offset-top-step) * $i);
+        }
+      }
     }
     img {
       width: 50%;
